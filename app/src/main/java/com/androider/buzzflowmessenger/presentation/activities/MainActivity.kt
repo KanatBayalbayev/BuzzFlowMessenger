@@ -3,11 +3,14 @@ package com.androider.buzzflowmessenger.presentation.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.androider.buzzflowmessenger.R
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 
 class MainActivity : AppCompatActivity() {
 
 
-    val component by lazy {
+    private val component by lazy {
         (application as MyApplication).component
     }
 
@@ -15,12 +18,7 @@ class MainActivity : AppCompatActivity() {
         component.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
-
+        
     }
 
-    companion object {
-        const val TAG = "TestFireMaker"
-    }
 }

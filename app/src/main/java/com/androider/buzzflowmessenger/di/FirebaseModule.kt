@@ -1,7 +1,7 @@
 package com.androider.buzzflowmessenger.di
 
 import com.androider.buzzflowmessenger.data.repositoryImpl.FirebaseRepositoryImpl
-import com.androider.buzzflowmessenger.domain.FirebaseRepository
+import com.androider.buzzflowmessenger.domain.repository.FirebaseRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Binds
 import dagger.Module
@@ -16,7 +16,6 @@ interface FirebaseModule {
 
 
     companion object{
-
         @Provides
         @ApplicationScope
         fun provideFirebaseAuth(): FirebaseAuth {
