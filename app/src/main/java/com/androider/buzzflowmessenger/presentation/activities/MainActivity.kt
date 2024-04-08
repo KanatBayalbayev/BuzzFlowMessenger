@@ -1,13 +1,8 @@
 package com.androider.buzzflowmessenger.presentation.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.androider.buzzflowmessenger.R
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
