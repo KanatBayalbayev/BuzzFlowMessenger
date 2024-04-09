@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         component.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        
+
     }
 
 }
