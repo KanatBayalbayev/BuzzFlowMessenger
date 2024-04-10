@@ -13,9 +13,6 @@ import com.androider.buzzflowmessenger.presentation.onboarding.screens.ThirdScre
 
 
 class ViewPagerFragment : Fragment() {
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

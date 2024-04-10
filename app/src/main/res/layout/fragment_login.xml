@@ -118,6 +118,7 @@
                     android:text="Remember me" />
 
                 <TextView
+                    android:id="@+id/btnResetPassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -156,7 +157,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/buttonToSignUp"
+                    android:id="@+id/btnSignUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="7dp"
