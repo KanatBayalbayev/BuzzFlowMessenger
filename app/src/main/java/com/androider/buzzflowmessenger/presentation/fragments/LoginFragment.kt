@@ -11,14 +11,14 @@ import androidx.navigation.fragment.findNavController
 import com.androider.buzzflowmessenger.R
 import com.androider.buzzflowmessenger.databinding.FragmentLoginBinding
 import com.androider.buzzflowmessenger.presentation.activities.MyApplication
-import com.androider.buzzflowmessenger.presentation.viewmodel.MainViewModel
+import com.androider.buzzflowmessenger.presentation.viewmodel.AuthViewModel
 import com.androider.buzzflowmessenger.presentation.viewmodel.MainViewModelFactory
 import javax.inject.Inject
 
 
 class LoginFragment : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var authViewModel: AuthViewModel
 
     @Inject
     lateinit var mainViewModelFactory: MainViewModelFactory
@@ -46,11 +46,17 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
+        authViewModel = ViewModelProvider(this, mainViewModelFactory)[AuthViewModel::class.java]
         navigation()
+
+
 
     }
 
+
+    private fun navigateToDashboard(){
+        authViewModel.isLoggedIn()
+    }
 
     private fun navigation(){
         navigateToResetPassword()

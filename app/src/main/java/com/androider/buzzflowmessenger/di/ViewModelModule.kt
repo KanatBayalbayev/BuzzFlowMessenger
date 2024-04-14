@@ -1,7 +1,7 @@
 package com.androider.buzzflowmessenger.di
 
 import androidx.lifecycle.ViewModel
-import com.androider.buzzflowmessenger.presentation.viewmodel.MainViewModel
+import com.androider.buzzflowmessenger.presentation.viewmodel.AuthViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -11,6 +11,6 @@ interface ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MainViewModel::class)
-    fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
+    @ViewModelKey(AuthViewModel::class)
+    fun bindMainViewModel(authViewModel: AuthViewModel): ViewModel
 }

@@ -1,4 +1,4 @@
-package com.androider.buzzflowmessenger
+package com.androider.buzzflowmessenger.presentation.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -8,17 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.androider.buzzflowmessenger.R
 import com.androider.buzzflowmessenger.databinding.FragmentResetPasswordBinding
-import com.androider.buzzflowmessenger.databinding.FragmentSignUpBinding
 import com.androider.buzzflowmessenger.presentation.activities.MyApplication
-import com.androider.buzzflowmessenger.presentation.viewmodel.MainViewModel
+import com.androider.buzzflowmessenger.presentation.viewmodel.AuthViewModel
 import com.androider.buzzflowmessenger.presentation.viewmodel.MainViewModelFactory
 import javax.inject.Inject
 
 
 class ResetPasswordFragment : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: AuthViewModel
 
     @Inject
     lateinit var mainViewModelFactory: MainViewModelFactory
@@ -49,7 +49,7 @@ class ResetPasswordFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this, mainViewModelFactory)[AuthViewModel::class.java]
         navigation()
     }
 

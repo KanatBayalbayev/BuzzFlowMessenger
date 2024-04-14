@@ -1,15 +1,15 @@
 package com.androider.buzzflowmessenger.di
 
-import com.androider.buzzflowmessenger.DashboardFragment
-import com.androider.buzzflowmessenger.ResetPasswordFragment
-import com.androider.buzzflowmessenger.SignUpFragment
+import com.androider.buzzflowmessenger.presentation.fragments.DashboardFragment
+import com.androider.buzzflowmessenger.presentation.fragments.ResetPasswordFragment
+import com.androider.buzzflowmessenger.presentation.fragments.SignUpFragment
 import com.androider.buzzflowmessenger.presentation.activities.MainActivity
 import com.androider.buzzflowmessenger.presentation.activities.MyApplication
 import com.androider.buzzflowmessenger.presentation.fragments.LoginFragment
 import dagger.Component
 
 @ApplicationScope
-@Component(modules = [FirebaseModule::class, ViewModelModule::class])
+@Component(modules = [DataModule::class, ViewModelModule::class])
 interface ApplicationComponent {
 
     fun inject(myApplication: MyApplication)
