@@ -7,8 +7,8 @@ class IsLoggedInUseCase @Inject constructor(
     private val firebaseRepository: FirebaseRepository
 ) {
 
-    operator fun invoke(){
-        firebaseRepository.isLoggedIn()
+    operator fun invoke(): Boolean {
+       return firebaseRepository.isLoggedIn()
     }
 
 }

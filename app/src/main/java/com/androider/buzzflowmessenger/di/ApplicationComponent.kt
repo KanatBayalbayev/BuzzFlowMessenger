@@ -1,5 +1,6 @@
 package com.androider.buzzflowmessenger.di
 
+import com.androider.buzzflowmessenger.ProfileSetupFragment
 import com.androider.buzzflowmessenger.presentation.fragments.DashboardFragment
 import com.androider.buzzflowmessenger.presentation.fragments.ResetPasswordFragment
 import com.androider.buzzflowmessenger.presentation.fragments.SignUpFragment
@@ -17,6 +18,7 @@ interface ApplicationComponent {
     fun inject(signUpFragment: SignUpFragment)
     fun inject(loginFragment: LoginFragment)
     fun inject(resetPasswordFragment: ResetPasswordFragment)
+    fun inject(profileSetupFragment: ProfileSetupFragment )
     fun inject(dashboardFragment: DashboardFragment)
 
     @Component.Factory

@@ -42,9 +42,11 @@
             app:destination="@id/resetPasswordFragment" />
         <action
             android:id="@+id/navigateToSignUp"
-            app:destination="@id/signUpFragment" />
+            app:destination="@id/signUpFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
         <action
-            android:id="@+id/action_loginFragment_to_dashboardFragment"
+            android:id="@+id/navigateToDashboard"
             app:destination="@id/dashboardFragment"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
@@ -70,10 +72,38 @@
             app:destination="@id/loginFragment"
             app:popUpTo="@id/signUpFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/navigateToProfileSetup"
+            app:destination="@id/profileSetupFragment" />
     </fragment>
     <fragment
         android:id="@+id/dashboardFragment"
         android:name="com.androider.buzzflowmessenger.presentation.fragments.DashboardFragment"
         android:label="fragment_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/navigateToLogin"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileSetupFragment"
+        android:name="com.androider.buzzflowmessenger.ProfileSetupFragment"
+        android:label="fragment_profile_setup"
+        tools:layout="@layout/fragment_profile_setup" >
+        <action
+            android:id="@+id/navigateToDashboard"
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@id/profileSetupFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.androider.buzzflowmessenger.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.androider.buzzflowmessenger.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

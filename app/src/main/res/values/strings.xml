@@ -66,4 +66,8 @@
 
     <string name="instructions">In BeInTouch, you can:\n🔍 Search for contacts by their email\n🌟 Personalize your stylish profile\n💬 Send instant messages anytime!</string>
     <string name="by_signing_up_you_agree_to_our_terms_privacy_policy"><![CDATA[By Signing Up, you agree to our Terms & Privacy Policy]]></string>
+    <string name="profile_fragment">Profile</string>
+    <string name="settings_fragment">Settings</string>
+    <string name="dashboard_fragment">Chats</string>
+    <string name="title_log_out">Log out</string>
 </resources>

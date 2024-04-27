@@ -7,17 +7,12 @@ import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 
 
-class SignUpUseCase @Inject constructor(
+class SignOutUseCase @Inject constructor(
     private val firebaseRepository: FirebaseRepository
 ) {
 
-    operator fun invoke(
-        name: String,
-        email: String,
-        password: String,
-        callback: (AuthResultEntity) -> Unit
-    ){
-         firebaseRepository.signUp(name, email, password, callback)
+    operator fun invoke(callback: (AuthResultEntity) -> Unit){
+         firebaseRepository.signOut(callback)
     }
 
 

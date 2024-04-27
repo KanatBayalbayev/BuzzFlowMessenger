@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.androider.buzzflowmessenger.R
@@ -28,10 +29,11 @@ import javax.inject.Inject
 
 class SignUpFragment : Fragment() {
 
-    private lateinit var viewModel: AuthViewModel
 
     @Inject
     lateinit var mainViewModelFactory: MainViewModelFactory
+
+    private lateinit var  viewModel: AuthViewModel
 
     private val component by lazy {
         (requireActivity().application as MyApplication).component
@@ -59,6 +61,7 @@ class SignUpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, mainViewModelFactory)[AuthViewModel::class.java]
         navigation()
+
         observeAuthViewModel()
     }
 
@@ -68,19 +71,20 @@ class SignUpFragment : Fragment() {
             when (authState) {
                 is AuthState.Loading -> {
                     showLoading()
-                    Log.d("SignUpFragment", "observeAuthViewModel: Loading")
                 }
 
                 is AuthState.Success -> {
-                    navigateToLogin()
-                    Log.d("SignUpFragment", "${authState.user}")
+                    navigateToProfileSetup()
                 }
 
                 is AuthState.Error -> {
                     hideLoading()
-                    showError(authState.exception)
-                    Log.d("SignUpFragment", authState.exception)
+                    if (authState.exception != null) {
+                        showError(authState.exception)
+                    }
                 }
+
+                else -> {}
             }
         }
     }
@@ -110,7 +114,7 @@ class SignUpFragment : Fragment() {
         binding.btnSignUp.setOnClickListener {
             makeEditTextRed()
             signUpUser()
-            hideKeyboard()
+//            hideKeyboard()
         }
     }
 
@@ -142,22 +146,7 @@ class SignUpFragment : Fragment() {
         FunctionUtils.highlightEmptyField(binding.inputName, binding.tilName, getRedColor())
         FunctionUtils.highlightEmptyField(binding.inputEmail, binding.tilEmail, getRedColor())
         FunctionUtils.highlightEmptyField(binding.inputPassword, binding.tilPassword, getRedColor())
-//        highlightEmptyField(binding.inputName, binding.tilName, getRedColor())
-//        highlightEmptyField(binding.inputEmail, binding.tilEmail, getRedColor())
-//        highlightEmptyField(binding.inputPassword, binding.tilPassword, getRedColor())
     }
-
-
-//    private fun highlightEmptyField(
-//        editText: EditText,
-//        textInputLayout: TextInputLayout,
-//        color: Int
-//    ) {
-//        if (editText.text.toString().trim().isEmpty()) {
-//            textInputLayout.boxStrokeColor = color
-//            editText.requestFocus()
-//        }
-//    }
 
     private fun getRedColor(): Int {
         return resources.getColor(R.color.red)
@@ -173,10 +162,17 @@ class SignUpFragment : Fragment() {
         binding.btnToBackToLoginFromSignUp.setOnClickListener {
             navigateToLogin()
         }
+        binding.loginButton.setOnClickListener {
+            navigateToLogin()
+        }
     }
 
     private fun navigateToLogin() {
         findNavController().navigate(R.id.navigateToLogin)
+    }
+
+    private fun navigateToProfileSetup() {
+        findNavController().navigate(R.id.navigateToProfileSetup)
     }
 
     override fun onDestroyView() {
