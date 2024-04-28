@@ -11,9 +11,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="-20dp"
         android:background="@color/white"
         app:cardCornerRadius="28dp"
-        android:layout_marginBottom="-20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -46,8 +46,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/darker_gray"
                     android:text="Enter Your Sign In Credentials"
+                    android:textColor="@android:color/darker_gray"
                     android:textSize="22sp" />
 
 
@@ -73,6 +73,7 @@
                     app:startIconDrawable="@drawable/ic_email">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/inputEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
@@ -92,6 +93,7 @@
                     app:startIconDrawable="@drawable/ic_lock">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/inputPassword"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:inputType="textPassword"
@@ -127,17 +129,31 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/btnSignIn"
+            <LinearLayout
+                android:id="@+id/btnsContainer"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/holo_purple"
-                android:gravity="center"
-                android:padding="14dp"
-                android:text="Sign In"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@+id/checkBoxContainer" />
+                app:layout_constraintTop_toBottomOf="@+id/checkBoxContainer">
+
+                <TextView
+                    android:id="@+id/btnSignIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/holo_purple"
+                    android:gravity="center"
+                    android:padding="14dp"
+                    android:text="Sign In"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/signUpContainer"
@@ -147,13 +163,13 @@
                 android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnSignIn">
+                app:layout_constraintTop_toBottomOf="@+id/btnsContainer">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/darker_gray"
                     android:text="Don't have an account?"
+                    android:textColor="@android:color/darker_gray"
                     android:textSize="18sp" />
 
                 <TextView
@@ -169,9 +185,9 @@
 
             <RelativeLayout
                 android:id="@+id/alternativesLabel"
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -193,8 +209,8 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:text="or sign in with"
-                    android:textColor="@android:color/darker_gray"
                     android:textAllCaps="true"
+                    android:textColor="@android:color/darker_gray"
                     android:textSize="14sp" />
 
                 <View
@@ -208,9 +224,9 @@
 
 
             <LinearLayout
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
                 app:layout_constraintTop_toBottomOf="@+id/alternativesLabel">
 

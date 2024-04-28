@@ -33,7 +33,17 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
-    fun signIn(email: String, password: String) = signInUseCase(email, password)
+    fun signIn(email: String, password: String) {
+        _state.value = AuthState.Loading
+        signInUseCase(email, password){
+            if (it.success){
+                _state.value = AuthState.isSignedIn
+            } else {
+                _state.value = AuthState.Error(it.errorMessage)
+            }
+        }
+    }
+
 
     fun resetPassword(email: String) = resetPasswordUseCase(email)
     fun isLoggedIn() {

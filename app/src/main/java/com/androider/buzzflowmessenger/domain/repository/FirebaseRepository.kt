@@ -13,7 +13,7 @@ interface FirebaseRepository {
         callback: (AuthResultEntity) -> Unit
     )
 
-    fun signIn(email: String, password: String)
+    fun signIn(email: String, password: String, callback: (AuthResultEntity) -> Unit)
     fun resetPassword(email: String)
     fun isLoggedIn(): Boolean
     fun signOut(callback: (AuthResultEntity) -> Unit)

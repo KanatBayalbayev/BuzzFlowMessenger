@@ -5,9 +5,11 @@ import com.androider.buzzflowmessenger.data.models.AuthResultDTO
 import com.androider.buzzflowmessenger.data.models.CurrentUserFirebase
 import com.androider.buzzflowmessenger.domain.models.AuthResultEntity
 import com.androider.buzzflowmessenger.domain.repository.FirebaseRepository
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.firestore.FirebaseFirestore
@@ -77,42 +79,55 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     }
 
-    private fun createAuthResultFromException(exception: Exception?): AuthResultDTO {
-        return when (exception) {
-            is FirebaseAuthWeakPasswordException -> AuthResultDTO(
-                success = false,
-                errorMessage = "Пароль слишком слабый"
-            )
-            is FirebaseAuthInvalidCredentialsException -> AuthResultDTO(
-                success = false,
-                errorMessage = "Неверный формат email"
-            )
-            is FirebaseAuthUserCollisionException -> AuthResultDTO(
-                success = false,
-                errorMessage = "Этот email уже используется"
-            )
-            is FirebaseAuthException -> {
-                when (exception.errorCode) {
-                    "ERROR_OPERATION_NOT_ALLOWED" -> AuthResultDTO(
-                        success = false,
-                        errorMessage = "Регистрация пользователей сейчас не разрешена"
+
+
+
+    override fun signIn(email: String, password: String, callback: (AuthResultEntity) -> Unit) {
+
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                val currentUser = it.user
+                if (currentUser != null) {
+                    authResultDTO = AuthResultDTO(
+                        success = true,
+                        user = CurrentUserFirebase(
+                            id = currentUser.uid,
+                            email = currentUser.email,
+                            isEmailVerified = currentUser.isEmailVerified,
+                            displayName = currentUser.displayName,
+                            photoUrl = currentUser.photoUrl,
+                            providerId = currentUser.providerId,
+                            phoneNumber = currentUser.phoneNumber,
+                        )
                     )
-                    else -> AuthResultDTO(
-                        success = false,
-                        errorMessage = "Неизвестная ошибка: ${exception.localizedMessage}"
-                    )
+                    callback(mainMapper.mapAuthResultDTOToEntity(authResultDTO))
                 }
             }
+            .addOnFailureListener {
+                val exception = createAuthResultFromException(it)
+                callback(mainMapper.mapAuthResultDTOToEntity(exception))
+            }
+    }
+
+    private fun createAuthResultFromException(exception: Exception?): AuthResultDTO {
+        return when (exception) {
+            is FirebaseAuthInvalidCredentialsException  -> AuthResultDTO(
+                success = false,
+                errorMessage = "Сообщите пользователю о неправильном email или пароле"
+            )
+            is FirebaseAuthInvalidUserException -> AuthResultDTO(
+                success = false,
+                errorMessage = "Сообщите пользователю, что аккаунт не найден"
+            )
+            is FirebaseNetworkException -> AuthResultDTO(
+                success = false,
+                errorMessage = "Сообщите пользователю о проблемах с сетью"
+            )
             else -> AuthResultDTO(
                 success = false,
                 errorMessage = "Аутентификация не удалась: ${exception?.message}"
             )
         }
-    }
-
-
-    override fun signIn(email: String, password: String) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
     }
 
     override fun resetPassword(email: String) {

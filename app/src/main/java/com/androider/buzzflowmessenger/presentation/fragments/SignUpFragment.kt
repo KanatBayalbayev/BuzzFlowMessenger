@@ -114,7 +114,7 @@ class SignUpFragment : Fragment() {
         binding.btnSignUp.setOnClickListener {
             makeEditTextRed()
             signUpUser()
-//            hideKeyboard()
+            hideKeyboard()
         }
     }
 
@@ -141,6 +141,14 @@ class SignUpFragment : Fragment() {
         }
     }
 
+    private fun closeKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val currentFocusedView: View? = requireActivity().currentFocus
+
+        currentFocusedView?.let { view ->
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
 
     private fun makeEditTextRed() {
         FunctionUtils.highlightEmptyField(binding.inputName, binding.tilName, getRedColor())
