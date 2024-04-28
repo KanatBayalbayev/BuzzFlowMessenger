@@ -1,8 +1,8 @@
-package com.androider.buzzflowmessenger.data.models
+package com.androider.buzzflowmessenger.domain.models
 
 import android.net.Uri
 
-data class CurrentUserFirebase(
+data class FoundUserEntity @JvmOverloads constructor(
     val id: String?,
     val email: String?,
     var password: String?,

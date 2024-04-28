@@ -8,7 +8,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.androider.buzzflowmessenger.R
 
-class CustomDialogFragment : DialogFragment() {
+class FindUserDialogFragment : DialogFragment() {
 
     interface DialogListener {
         fun onConfirm()
@@ -23,7 +23,7 @@ class CustomDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
-        val view = layoutInflater.inflate(R.layout.custom_dialog, null)
+        val view = layoutInflater.inflate(R.layout.find_user_dialog, null)
 
         builder.setView(view)
 
@@ -45,7 +45,7 @@ class CustomDialogFragment : DialogFragment() {
 
     companion object {
         fun showDialog(fragmentManager: FragmentManager, listener: DialogListener) {
-            val dialog = CustomDialogFragment().apply {
+            val dialog = FindUserDialogFragment().apply {
                 setDialogListener(listener)
             }
             dialog.show(fragmentManager, "CustomDialog")

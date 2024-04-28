@@ -7,24 +7,27 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.androider.buzzflowmessenger.R
 import com.androider.buzzflowmessenger.databinding.FragmentDashboardBinding
-import com.androider.buzzflowmessenger.presentation.CustomDialogFragment
+import com.androider.buzzflowmessenger.presentation.ExitDialogFragment
+import com.androider.buzzflowmessenger.presentation.FindUserBottomSheetDialogFragment
+import com.androider.buzzflowmessenger.presentation.FindUserDialogFragment
 import com.androider.buzzflowmessenger.presentation.activities.MyApplication
 import com.androider.buzzflowmessenger.presentation.viewmodel.AuthState
 import com.androider.buzzflowmessenger.presentation.viewmodel.AuthViewModel
 import com.androider.buzzflowmessenger.presentation.viewmodel.MainViewModelFactory
-import com.androider.buzzflowmessenger.presentation.viewmodel.SharedViewModel
 import java.io.IOException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 
-class DashboardFragment : Fragment(), CustomDialogFragment.DialogListener {
+class DashboardFragment :
+    Fragment(),
+    ExitDialogFragment.DialogListener,
+    FindUserDialogFragment.DialogListener {
 
     private lateinit var viewModel: AuthViewModel
 
@@ -70,17 +73,30 @@ class DashboardFragment : Fragment(), CustomDialogFragment.DialogListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, mainViewModelFactory)[AuthViewModel::class.java]
+        showDialogExit()
+        observeViewModel()
+        findUser()
+
+
+
+
+    }
+
+    private fun findUser(){
+        binding.btnFindUser.setOnClickListener {
+            showFindUserDialog()
+        }
+    }
+
+
+
+    private fun showDialogExit(){
         val isSpecialMode = arguments?.getBoolean("is_special_mode") ?: false
         if (isSpecialMode){
-//            val dialog = CustomDialogFragment()
-//            dialog.listener = this
-//            dialog.show(parentFragmentManager, "CustomDialog")
             showCustomDialog()
-            Toast.makeText(requireContext(), "Data: $isSpecialMode", Toast.LENGTH_SHORT).show()
         }
-
-
-
+    }
+    private fun observeViewModel(){
         viewModel.state.observe(viewLifecycleOwner){
             when(it){
                 is AuthState.isSignedOut -> {
@@ -89,22 +105,13 @@ class DashboardFragment : Fragment(), CustomDialogFragment.DialogListener {
                 else -> {}
             }
         }
-
-
-
     }
-
     private fun showCustomDialog() {
-        CustomDialogFragment.showDialog(parentFragmentManager, this)
+        ExitDialogFragment.showDialog(parentFragmentManager, this)
     }
-
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun showFindUserDialog() {
+        FindUserBottomSheetDialogFragment().show(parentFragmentManager, "MyBottomSheetDialogFragment")
     }
-
     override fun onConfirm() {
         try {
             viewModel.signOut()
@@ -120,6 +127,11 @@ class DashboardFragment : Fragment(), CustomDialogFragment.DialogListener {
 
     override fun onCancel() {
         Log.d(TAG, "Sign-out canceled.")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

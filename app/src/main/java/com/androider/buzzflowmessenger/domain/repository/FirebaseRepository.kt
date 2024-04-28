@@ -1,6 +1,8 @@
 package com.androider.buzzflowmessenger.domain.repository
 
 import com.androider.buzzflowmessenger.domain.models.AuthResultEntity
+import com.androider.buzzflowmessenger.domain.models.FoundUserEntity
+import com.androider.buzzflowmessenger.domain.models.MainResultEntity
 import com.androider.buzzflowmessenger.presentation.viewmodel.AuthState
 import com.google.firebase.auth.FirebaseUser
 
@@ -17,6 +19,8 @@ interface FirebaseRepository {
     fun resetPassword(email: String)
     fun isLoggedIn(): Boolean
     fun signOut(callback: (AuthResultEntity) -> Unit)
+
+    fun findUser(email: String, callback: (MainResultEntity) -> Unit)
 
 
 }

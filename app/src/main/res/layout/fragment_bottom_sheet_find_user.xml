@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bottom Sheet Title"
+        android:textSize="18sp"/>
+    <EditText
+        android:id="@+id/inputFindUser"
+        android:hint="find user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/action_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Perform Action"/>
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Close"/>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    <LinearLayout
+        android:id="@+id/foundUserContainer"
+        android:visibility="gone"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/ic_google"
+            android:layout_width="70dp"
+            android:layout_height="70dp"/>
+
+        <TextView
+            android:id="@+id/foundUserName"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            android:text="Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btnAddFoundUser"
+            android:layout_marginTop="10dp"
+            android:text="Add user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+</LinearLayout>

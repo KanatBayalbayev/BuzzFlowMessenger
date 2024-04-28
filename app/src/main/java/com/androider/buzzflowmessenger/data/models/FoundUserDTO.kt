@@ -2,7 +2,7 @@ package com.androider.buzzflowmessenger.data.models
 
 import android.net.Uri
 
-data class CurrentUserFirebase(
+data class FoundUserDTO(
     val id: String?,
     val email: String?,
     var password: String?,
@@ -13,4 +13,17 @@ data class CurrentUserFirebase(
     var lastMessage: String? = "",
     var lastTimeMessageSent: String? = "",
     var isTyping: Boolean? = false
-)
+){
+    constructor() : this(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    )
+}
