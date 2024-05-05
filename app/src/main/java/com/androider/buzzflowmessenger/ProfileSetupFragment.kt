@@ -1,7 +1,11 @@
 package com.androider.buzzflowmessenger
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +18,6 @@ import com.androider.buzzflowmessenger.presentation.activities.MyApplication
 import com.androider.buzzflowmessenger.presentation.viewmodel.AuthViewModel
 import com.androider.buzzflowmessenger.presentation.viewmodel.MainViewModelFactory
 import javax.inject.Inject
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 
 class ProfileSetupFragment : Fragment() {
@@ -36,6 +35,7 @@ class ProfileSetupFragment : Fragment() {
     private val binding: FragmentProfileSetupBinding
         get() = _binding ?: throw RuntimeException("FragmentProfileSetupBinding is null")
 
+    private var selectedImageUri: Uri? = null
     override fun onAttach(context: Context) {
         component.inject(this)
         super.onAttach(context)
@@ -54,6 +54,8 @@ class ProfileSetupFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, mainViewModelFactory)[AuthViewModel::class.java]
         navigation()
+
+        setupProfile()
     }
 
     private fun navigation() {
@@ -68,6 +70,34 @@ class ProfileSetupFragment : Fragment() {
             findNavController().navigate(R.id.navigateToDashboard)
         }
 
+    }
+
+    private fun setupProfile(){
+        binding.buttonUserIconProfileUpload.setOnClickListener {
+            openGallery()
+        }
+    }
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        intent.type = "image/*"
+        startActivityForResult(intent, 1)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
+            selectedImageUri = data.data!!
+            val bitmap = selectedImageUri.let {
+                MediaStore.Images.Media.getBitmap(requireContext().contentResolver, it)
+            }
+            if (bitmap != null) {
+                binding.userIconProfileCircleImageView.visibility = View.VISIBLE
+                binding.userIconProfileImageView.visibility = View.GONE
+                binding.userIconProfileCircleImageView.setImageBitmap(bitmap)
+            }
+        }
     }
 
 

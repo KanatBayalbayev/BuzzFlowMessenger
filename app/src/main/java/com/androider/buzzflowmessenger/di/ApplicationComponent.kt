@@ -1,5 +1,6 @@
 package com.androider.buzzflowmessenger.di
 
+import com.androider.buzzflowmessenger.ProfileFragment
 import com.androider.buzzflowmessenger.ProfileSetupFragment
 import com.androider.buzzflowmessenger.presentation.FindUserBottomSheetDialogFragment
 import com.androider.buzzflowmessenger.presentation.fragments.DashboardFragment
@@ -22,6 +23,7 @@ interface ApplicationComponent {
     fun inject(profileSetupFragment: ProfileSetupFragment )
     fun inject(dashboardFragment: DashboardFragment)
     fun inject(bottomSheetDialogFragment: FindUserBottomSheetDialogFragment)
+    fun inject(profileFragment: ProfileFragment)
 
     @Component.Factory
     interface ComponentFactory{
