@@ -1,7 +1,5 @@
 package com.androider.buzzflowmessenger.presentation.viewmodel
 
-import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +8,6 @@ import com.androider.buzzflowmessenger.domain.usecases.ResetPasswordUseCase
 import com.androider.buzzflowmessenger.domain.usecases.SignInUseCase
 import com.androider.buzzflowmessenger.domain.usecases.SignOutUseCase
 import com.androider.buzzflowmessenger.domain.usecases.SignUpUseCase
-import com.androider.buzzflowmessenger.presentation.utils.FunctionUtils
 import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(
@@ -46,7 +43,7 @@ class AuthViewModel @Inject constructor(
 
 
     fun resetPassword(email: String) = resetPasswordUseCase(email)
-    fun isLoggedIn() {
+    fun getStateLoggedIn() {
         if (isLoggedInUseCase()){
             _state.value = AuthState.isSignedIn
         }

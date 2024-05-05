@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.androider.buzzflowmessenger.R
@@ -56,7 +55,7 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProvider(this, mainViewModelFactory)[AuthViewModel::class.java]
         navigation()
         signIn()
-        viewModel.isLoggedIn()
+        viewModel.getStateLoggedIn()
         viewModel.state.observe(viewLifecycleOwner) { authState ->
             when (authState) {
                 is AuthState.isSignedIn -> {
@@ -121,7 +120,7 @@ class LoginFragment : Fragment() {
 
 
     private fun navigateToDashboard() {
-        viewModel.isLoggedIn()
+        viewModel.getStateLoggedIn()
     }
 
     private fun navigation() {

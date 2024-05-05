@@ -98,7 +98,7 @@ class FindUserBottomSheetDialogFragment: BottomSheetDialogFragment() {
                         Toast.LENGTH_LONG
                     ).show()
                     hideLoading()
-                    observeFoundUser(mainState.user!!)
+                    mainState.user?.let { observeFoundUser(it) }
                 }
                 is MainState.Error -> {
                     Log.d(TAG, "observeViewModel: Error")
@@ -109,11 +109,18 @@ class FindUserBottomSheetDialogFragment: BottomSheetDialogFragment() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
+
+                else -> {}
             }
         }
     }
     private fun observeFoundUser(foundUserEntity: FoundUserEntity){
         binding.foundUserName.text = foundUserEntity.name
+
+        binding.btnAddFoundUser.setOnClickListener {
+            viewModel.addFoundUserToChats(foundUserEntity)
+        }
+
     }
 
     private fun showLoading() {

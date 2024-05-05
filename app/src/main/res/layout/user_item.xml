@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="6dp"
+    android:padding="12dp"
+    app:cardUseCompatPadding="true">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/userIconCircleImageView"
+        app:civ_border_width="1dp"
+        android:visibility="gone"
+        app:civ_border_color="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
+
+    <ImageView
+        android:id="@+id/userIconImageView"
+        app:civ_border_width="1dp"
+        android:src="@drawable/usericon"
+        android:visibility="visible"
+        app:civ_border_color="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
+
+
+
+
+    <View
+        android:id="@+id/backroundForMark"
+        android:visibility="gone"
+        tools:visibility="gone"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="-9dp"
+        android:layout_marginBottom="-9dp"
+        android:background="@drawable/circle_button_to_mark_message"
+        app:layout_constraintBottom_toBottomOf="@+id/userIconImageView"
+        app:layout_constraintEnd_toEndOf="@+id/userIconImageView" />
+
+    <ImageView
+        android:id="@+id/sign"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:visibility="gone"
+        tools:visibility="gone"
+        android:contentDescription="@string/logoicon"
+        android:src="@drawable/check_solid"
+        app:layout_constraintTop_toTopOf="@+id/backroundForMark"
+        app:layout_constraintStart_toStartOf="@+id/backroundForMark"
+        app:layout_constraintBottom_toBottomOf="@+id/backroundForMark"
+        app:layout_constraintEnd_toEndOf="@+id/backroundForMark"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/userName"
+        android:fontFamily="serif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Kanat Bayalbayev" />
+
+    <TextView
+        android:id="@+id/lastMessageUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:alpha="0.7"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userName"
+        tools:text="There's something in the chat" />
+
+    <TextView
+        android:id="@+id/lastMessageTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="12:45" />
+
+
+
+    <ImageView
+        android:id="@+id/buttonToDeleteUserItem"
+        tools:visibility="gone"
+        android:visibility="gone"
+        android:contentDescription="@string/buttontodeletechatitem"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@android:drawable/ic_delete"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:tint="@android:color/holo_red_dark" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginTop="34dp"
+        android:layout_marginStart="60dp"
+        android:background="@drawable/underline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userName" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

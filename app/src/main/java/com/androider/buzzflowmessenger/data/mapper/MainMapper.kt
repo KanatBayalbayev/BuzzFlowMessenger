@@ -39,7 +39,8 @@ class MainMapper @Inject constructor() {
                 name = mainResultDTO.user?.name,
                 online = mainResultDTO.user?.online,
                 userProfileImage = mainResultDTO.user?.userProfileImage
-            )
+            ),
+            chats = mainResultDTO.chats
         )
     }
 }

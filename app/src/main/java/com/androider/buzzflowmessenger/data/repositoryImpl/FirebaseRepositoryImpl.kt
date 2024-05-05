@@ -7,18 +7,15 @@ import com.androider.buzzflowmessenger.data.models.CurrentUserFirebase
 import com.androider.buzzflowmessenger.data.models.FoundUserDTO
 import com.androider.buzzflowmessenger.data.models.MainResultDTO
 import com.androider.buzzflowmessenger.domain.models.AuthResultEntity
+import com.androider.buzzflowmessenger.domain.models.FoundUserEntity
 import com.androider.buzzflowmessenger.domain.models.MainResultEntity
 import com.androider.buzzflowmessenger.domain.repository.FirebaseRepository
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,7 +24,6 @@ import javax.inject.Inject
 class FirebaseRepositoryImpl @Inject constructor(
     private val mainMapper: MainMapper,
     private val firebaseAuth: FirebaseAuth,
-    private val firestore: FirebaseFirestore,
     private val database: FirebaseDatabase
 ) : FirebaseRepository {
 
@@ -35,6 +31,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     private lateinit var mainResultDTO: MainResultDTO
 
     private val users = database.getReference("Users")
+    private val chats = database.getReference("Friends")
 
     override fun signUp(
         name: String,
@@ -116,8 +113,6 @@ class FirebaseRepositoryImpl @Inject constructor(
     }
 
 
-
-
     override fun signIn(email: String, password: String, callback: (AuthResultEntity) -> Unit) {
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
@@ -138,18 +133,21 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     private fun createAuthResultFromException(exception: Exception?): AuthResultDTO {
         return when (exception) {
-            is FirebaseAuthInvalidCredentialsException  -> AuthResultDTO(
+            is FirebaseAuthInvalidCredentialsException -> AuthResultDTO(
                 success = false,
                 errorMessage = "Сообщите пользователю о неправильном email или пароле"
             )
+
             is FirebaseAuthInvalidUserException -> AuthResultDTO(
                 success = false,
                 errorMessage = "Сообщите пользователю, что аккаунт не найден"
             )
+
             is FirebaseNetworkException -> AuthResultDTO(
                 success = false,
                 errorMessage = "Сообщите пользователю о проблемах с сетью"
             )
+
             else -> AuthResultDTO(
                 success = false,
                 errorMessage = "Аутентификация не удалась: ${exception?.message}"
@@ -173,18 +171,18 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     override fun findUser(email: String, callback: (MainResultEntity) -> Unit) {
         val currentUserEmail = firebaseAuth.currentUser?.email
-        users.addValueEventListener(object : ValueEventListener{
+        users.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for (user in snapshot.children){
+                for (user in snapshot.children) {
                     val userEmail = user.child("email").getValue(String::class.java)
                     Log.d(TAG, "userEmail: $userEmail")
-                    if (currentUserEmail == userEmail){
+                    if (currentUserEmail == userEmail) {
                         continue
                     }
-                    if (userEmail == email){
+                    if (userEmail == email) {
                         val foundUser = user.getValue(FoundUserDTO::class.java)
                         Log.d(TAG, "foundUser: $foundUser")
-                        if (foundUser != null){
+                        if (foundUser != null) {
                             mainResultDTO = MainResultDTO(
                                 success = true,
                                 user = foundUser
@@ -204,8 +202,51 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     }
 
-    companion object{
-        private const val TAG = "FindUserBottomSheetDialogFragment"
+    override fun addFoundUserToChats(foundUser: FoundUserEntity) {
+
+        foundUser.id?.let {
+            chats.child(firebaseAuth.currentUser?.uid ?: "").child(it).setValue(foundUser)
+        }
+
+    }
+
+    override fun getChats(callback: (MainResultEntity) -> Unit) {
+        chats.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val listOfFriends = arrayListOf<FoundUserEntity>()
+                for (user in snapshot.children) {
+                    if (user.key == firebaseAuth.currentUser?.uid) {
+                        for (friend in user.children) {
+                            val friendFromDB = friend.getValue(FoundUserEntity::class.java)
+
+                            if (friendFromDB != null) {
+                                Log.d(TAG, "onDataChange: $friendFromDB")
+                                listOfFriends.add(friendFromDB)
+                            }
+                        }
+                    }
+                }
+                mainResultDTO = MainResultDTO(
+                    success = true,
+                    chats = listOfFriends
+                )
+                callback(mainMapper.mapMainResultDTOToEntity(mainResultDTO))
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                mainResultDTO = MainResultDTO(
+                    success = false,
+                    errorMessage = error.message
+                )
+                callback(mainMapper.mapMainResultDTOToEntity(mainResultDTO))
+            }
+
+        })
+    }
+
+    companion object {
+        private const val TAG = "FirebaseRepositoryImpl"
     }
 
 

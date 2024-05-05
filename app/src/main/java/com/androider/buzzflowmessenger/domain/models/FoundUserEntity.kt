@@ -2,7 +2,7 @@ package com.androider.buzzflowmessenger.domain.models
 
 import android.net.Uri
 
-data class FoundUserEntity @JvmOverloads constructor(
+data class FoundUserEntity(
     val id: String?,
     val email: String?,
     var password: String?,
@@ -13,4 +13,17 @@ data class FoundUserEntity @JvmOverloads constructor(
     var lastMessage: String? = "",
     var lastTimeMessageSent: String? = "",
     var isTyping: Boolean? = false
-)
+){
+    constructor() : this(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    )
+}

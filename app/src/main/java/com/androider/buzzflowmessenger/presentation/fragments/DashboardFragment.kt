@@ -7,17 +7,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.androider.buzzflowmessenger.R
 import com.androider.buzzflowmessenger.databinding.FragmentDashboardBinding
+import com.androider.buzzflowmessenger.domain.models.FoundUserEntity
 import com.androider.buzzflowmessenger.presentation.ExitDialogFragment
 import com.androider.buzzflowmessenger.presentation.FindUserBottomSheetDialogFragment
 import com.androider.buzzflowmessenger.presentation.FindUserDialogFragment
 import com.androider.buzzflowmessenger.presentation.activities.MyApplication
+import com.androider.buzzflowmessenger.presentation.adapters.UsersAdapter
+import com.androider.buzzflowmessenger.presentation.models.FoundUser
 import com.androider.buzzflowmessenger.presentation.viewmodel.AuthState
 import com.androider.buzzflowmessenger.presentation.viewmodel.AuthViewModel
+import com.androider.buzzflowmessenger.presentation.viewmodel.MainState
+import com.androider.buzzflowmessenger.presentation.viewmodel.MainViewModel
 import com.androider.buzzflowmessenger.presentation.viewmodel.MainViewModelFactory
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -29,7 +35,10 @@ class DashboardFragment :
     ExitDialogFragment.DialogListener,
     FindUserDialogFragment.DialogListener {
 
-    private lateinit var viewModel: AuthViewModel
+    private lateinit var authViewModel: AuthViewModel
+    private lateinit var mainViewModel: MainViewModel
+
+    private lateinit var usersAdapter: UsersAdapter
 
     @Inject
     lateinit var mainViewModelFactory: MainViewModelFactory
@@ -53,6 +62,9 @@ class DashboardFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        usersAdapter = UsersAdapter(requireContext())
+
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 requireActivity().finish()
@@ -72,15 +84,32 @@ class DashboardFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this, mainViewModelFactory)[AuthViewModel::class.java]
+        authViewModel = ViewModelProvider(this, mainViewModelFactory)[AuthViewModel::class.java]
+        mainViewModel = ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
         showDialogExit()
         observeViewModel()
         findUser()
-
+        attachRVtoAdapter()
+        handleOnUserClick()
 
 
 
     }
+
+    private fun attachRVtoAdapter(){
+        binding.recyclerView.adapter = usersAdapter
+//        binding.recyclerView.itemAnimator = null
+    }
+    private fun handleOnUserClick(){
+        usersAdapter.onUserClickListener = object : UsersAdapter.OnUserClickListener{
+            
+            override fun onUserClick(foundUser: FoundUserEntity) {
+                Log.d(TAG, "onUserClick: $foundUser")
+            }
+
+        }
+    }
+
 
     private fun findUser(){
         binding.btnFindUser.setOnClickListener {
@@ -97,7 +126,7 @@ class DashboardFragment :
         }
     }
     private fun observeViewModel(){
-        viewModel.state.observe(viewLifecycleOwner){
+        authViewModel.state.observe(viewLifecycleOwner){
             when(it){
                 is AuthState.isSignedOut -> {
                     findNavController().navigate(R.id.navigateToLogin)
@@ -105,6 +134,35 @@ class DashboardFragment :
                 else -> {}
             }
         }
+
+        mainViewModel.getChats()
+        mainViewModel.state.observe(viewLifecycleOwner){
+            when(it){
+                is MainState.Loading -> {
+                    showLoading()
+                }
+                is MainState.Chats -> {
+                    hideLoading()
+                    usersAdapter.submitList(it.chats)
+                }
+                is MainState.Error -> {
+                    hideLoading()
+                    Toast.makeText(requireContext(), "${it.exception}", Toast.LENGTH_LONG).show()
+                }
+
+                else -> {}
+            }
+        }
+    }
+
+    private fun showLoading() {
+        binding.recyclerView.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        binding.recyclerView.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
     }
     private fun showCustomDialog() {
         ExitDialogFragment.showDialog(parentFragmentManager, this)
@@ -114,7 +172,7 @@ class DashboardFragment :
     }
     override fun onConfirm() {
         try {
-            viewModel.signOut()
+            authViewModel.signOut()
             Log.i(TAG, "User signed out successfully.")
         } catch (e: SocketTimeoutException) {
             Log.w(TAG, "Sign-out timed out.", e)
