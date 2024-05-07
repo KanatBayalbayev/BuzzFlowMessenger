@@ -14,6 +14,7 @@ import com.androider.buzzflowmessenger.R
 import com.androider.buzzflowmessenger.databinding.FragmentLoginBinding
 import com.androider.buzzflowmessenger.presentation.activities.MyApplication
 import com.androider.buzzflowmessenger.presentation.utils.FunctionUtils
+import com.androider.buzzflowmessenger.presentation.utils.SharedPreferencesManager
 import com.androider.buzzflowmessenger.presentation.utils.getTrimmedValue
 import com.androider.buzzflowmessenger.presentation.viewmodel.AuthState
 import com.androider.buzzflowmessenger.presentation.viewmodel.AuthViewModel
@@ -22,6 +23,8 @@ import javax.inject.Inject
 
 
 class LoginFragment : Fragment() {
+
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
 
     @Inject
     lateinit var mainViewModelFactory: MainViewModelFactory
@@ -42,6 +45,11 @@ class LoginFragment : Fragment() {
 
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,6 +68,11 @@ class LoginFragment : Fragment() {
             when (authState) {
                 is AuthState.isSignedIn -> {
                     findNavController().navigate(R.id.navigateToDashboard)
+                }
+                is AuthState.Success -> {
+                    findNavController().navigate(R.id.navigateToDashboard)
+
+                    sharedPreferencesManager.saveCurrentUserID(authState.user?.id.toString())
                 }
                 is AuthState.Loading -> {
                     showLoading()

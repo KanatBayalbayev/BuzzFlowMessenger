@@ -40,7 +40,8 @@ class MainMapper @Inject constructor() {
                 online = mainResultDTO.user?.online,
                 userProfileImage = mainResultDTO.user?.userProfileImage
             ),
-            chats = mainResultDTO.chats
+            chats = mainResultDTO.chats,
+            messages = mainResultDTO.messages
         )
     }
 }

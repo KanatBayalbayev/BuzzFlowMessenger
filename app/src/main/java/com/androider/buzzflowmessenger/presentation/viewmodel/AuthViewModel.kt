@@ -34,7 +34,7 @@ class AuthViewModel @Inject constructor(
         _state.value = AuthState.Loading
         signInUseCase(email, password){
             if (it.success){
-                _state.value = AuthState.isSignedIn
+                _state.value = AuthState.Success(it.user)
             } else {
                 _state.value = AuthState.Error(it.errorMessage)
             }

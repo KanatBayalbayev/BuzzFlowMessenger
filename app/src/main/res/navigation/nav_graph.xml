@@ -84,10 +84,16 @@
         <action
             android:id="@+id/navigateToLogin"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/navigateToChat"
+            app:destination="@id/chatFragment" />
+        <argument
+            android:name="CurrentUserID"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/profileSetupFragment"
-        android:name="com.androider.buzzflowmessenger.ProfileSetupFragment"
+        android:name="com.androider.buzzflowmessenger.presentation.fragments.ProfileSetupFragment"
         android:label="fragment_profile_setup"
         tools:layout="@layout/fragment_profile_setup" >
         <action
@@ -98,12 +104,23 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.androider.buzzflowmessenger.ProfileFragment"
+        android:name="com.androider.buzzflowmessenger.presentation.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.androider.buzzflowmessenger.SettingsFragment"
+        android:name="com.androider.buzzflowmessenger.presentation.fragments.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.androider.buzzflowmessenger.presentation.fragments.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" >
+        <argument
+            android:name="CurrentUserID"
+            app:argType="string" />
+        <argument android:name="AnotherUserID"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -1,23 +1,17 @@
-package com.androider.buzzflowmessenger
+package com.androider.buzzflowmessenger.presentation.fragments
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.androider.buzzflowmessenger.databinding.FragmentDashboardBinding
+import androidx.fragment.app.Fragment
+import com.androider.buzzflowmessenger.R
 import com.androider.buzzflowmessenger.databinding.FragmentProfileSetupBinding
 import com.androider.buzzflowmessenger.presentation.activities.MyApplication
 import com.androider.buzzflowmessenger.presentation.viewmodel.MainViewModel
 import com.androider.buzzflowmessenger.presentation.viewmodel.MainViewModelFactory
 import javax.inject.Inject
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 
 class ProfileFragment : Fragment() {
 

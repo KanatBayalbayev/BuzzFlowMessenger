@@ -1,4 +1,4 @@
-package com.androider.buzzflowmessenger.presentation.adapters
+package com.androider.buzzflowmessenger.presentation.adapters.users
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.androider.buzzflowmessenger.databinding.UserItemBinding
 import com.androider.buzzflowmessenger.domain.models.FoundUserEntity
-import com.androider.buzzflowmessenger.presentation.models.FoundUser
-import com.squareup.picasso.Picasso
 
 class UsersAdapter(
     private val context: Context

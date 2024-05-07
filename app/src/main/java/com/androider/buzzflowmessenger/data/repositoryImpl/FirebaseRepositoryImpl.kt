@@ -9,6 +9,7 @@ import com.androider.buzzflowmessenger.data.models.MainResultDTO
 import com.androider.buzzflowmessenger.domain.models.AuthResultEntity
 import com.androider.buzzflowmessenger.domain.models.FoundUserEntity
 import com.androider.buzzflowmessenger.domain.models.MainResultEntity
+import com.androider.buzzflowmessenger.domain.models.MessageEntity
 import com.androider.buzzflowmessenger.domain.repository.FirebaseRepository
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
@@ -18,7 +19,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.FirebaseFirestore
 import javax.inject.Inject
 
 class FirebaseRepositoryImpl @Inject constructor(
@@ -32,6 +32,7 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     private val users = database.getReference("Users")
     private val chats = database.getReference("Friends")
+    private val messages = database.getReference("Messages")
 
     override fun signUp(
         name: String,
@@ -120,7 +121,15 @@ class FirebaseRepositoryImpl @Inject constructor(
                 val currentUser = it.user
                 if (currentUser != null) {
                     authResultDTO = AuthResultDTO(
-                        success = true
+                        success = true,
+                        user = CurrentUserFirebase(
+                            id = currentUser.uid,
+                            email = currentUser.email,
+                            password = password,
+                            name = currentUser.displayName,
+                            online = true
+                        )
+
                     )
                     callback(mainMapper.mapAuthResultDTOToEntity(authResultDTO))
                 }
@@ -243,6 +252,109 @@ class FirebaseRepositoryImpl @Inject constructor(
             }
 
         })
+    }
+
+    override fun sendMessage(messageEntity: MessageEntity) {
+//        users.child(message.senderID).addValueEventListener(object : ValueEventListener{
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                val user = snapshot.getValue(CurrentUserFirebase::class.java)
+//
+//                chats.child(message.companionID).child(message.senderID).setValue(user)
+//
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
+
+        chats
+            .child(messageEntity.companionID)
+            .child(messageEntity.senderID)
+            .child("lastMessage")
+            .setValue(messageEntity.textMessage)
+        chats
+            .child(messageEntity.companionID)
+            .child(messageEntity.senderID)
+            .child("lastTimeMessageSent")
+            .setValue(messageEntity.timestamp)
+        chats
+            .child(messageEntity.senderID)
+            .child(messageEntity.companionID)
+            .child("lastMessage")
+            .setValue(messageEntity.textMessage)
+        chats
+            .child(messageEntity.senderID)
+            .child(messageEntity.companionID)
+            .child("lastTimeMessageSent")
+            .setValue(messageEntity.timestamp)
+
+
+        messages
+            .child(messageEntity.senderID)
+            .child(messageEntity.companionID)
+            .push()
+            .setValue(messageEntity)
+            .addOnSuccessListener {
+                Log.d("ChatViewModel", "MessageOfUser: $it")
+
+                messages
+                    .child(messageEntity.companionID)
+                    .child(messageEntity.senderID)
+                    .push()
+                    .setValue(messageEntity)
+                    .addOnSuccessListener {
+//                                _isMessageSent.value = true
+                        Log.d("ChatViewModel", "MessageOfCompanion: $it")
+
+                    }
+                    .addOnFailureListener {
+//                                _error.value = it.message
+                        Log.d("ChatViewModel", "MessageErrorOfCompanion: " + it.message.toString())
+                    }
+            }
+            .addOnFailureListener {
+//                        _error.value = it.message
+                Log.d("ChatViewModel", it.message.toString())
+                Log.d("ChatViewModel", "MessageErrorOfCurrentUser: " + it.message.toString())
+            }
+
+
+    }
+
+    override fun getMessages(
+        currentUserID: String,
+        anotherUserID: String,
+        callback: (MainResultEntity) -> Unit
+    ) {
+        messages.child(currentUserID).child(anotherUserID)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val messagesList = arrayListOf<MessageEntity>()
+                    for (message in snapshot.children) {
+                        val messageEntityFromDB = message.getValue(MessageEntity::class.java)
+                        if (messageEntityFromDB != null) {
+                            messagesList.add(messageEntityFromDB)
+                        }
+                    }
+
+                    mainResultDTO = MainResultDTO(
+                        success = true,
+                        messages = messagesList
+                    )
+                    callback(mainMapper.mapMainResultDTOToEntity(mainResultDTO))
+                    Log.d("ChatViewModel", "Messages: $messagesList")
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    mainResultDTO = MainResultDTO(
+                        success = false,
+                        errorMessage = error.message
+                    )
+                    callback(mainMapper.mapMainResultDTOToEntity(mainResultDTO))
+                }
+            })
     }
 
     companion object {

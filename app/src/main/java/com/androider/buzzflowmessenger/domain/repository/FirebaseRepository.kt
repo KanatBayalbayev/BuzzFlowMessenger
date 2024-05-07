@@ -3,9 +3,7 @@ package com.androider.buzzflowmessenger.domain.repository
 import com.androider.buzzflowmessenger.domain.models.AuthResultEntity
 import com.androider.buzzflowmessenger.domain.models.FoundUserEntity
 import com.androider.buzzflowmessenger.domain.models.MainResultEntity
-import com.androider.buzzflowmessenger.presentation.models.FoundUser
-import com.androider.buzzflowmessenger.presentation.viewmodel.AuthState
-import com.google.firebase.auth.FirebaseUser
+import com.androider.buzzflowmessenger.domain.models.MessageEntity
 
 interface FirebaseRepository {
 
@@ -26,6 +24,14 @@ interface FirebaseRepository {
     fun addFoundUserToChats(foundUser: FoundUserEntity)
 
     fun getChats(callback: (MainResultEntity) -> Unit)
+
+    fun sendMessage(messageEntity: MessageEntity)
+
+    fun getMessages(
+        currentUserID: String,
+        anotherUserID: String,
+        callback: (MainResultEntity) -> Unit
+    )
 
 
 }

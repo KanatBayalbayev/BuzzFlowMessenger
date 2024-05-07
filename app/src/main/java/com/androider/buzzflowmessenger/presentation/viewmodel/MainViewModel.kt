@@ -4,15 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.androider.buzzflowmessenger.domain.models.FoundUserEntity
+import com.androider.buzzflowmessenger.domain.models.MessageEntity
 import com.androider.buzzflowmessenger.domain.usecases.AddFoundUserToChatsUseCase
 import com.androider.buzzflowmessenger.domain.usecases.FindUserUseCase
 import com.androider.buzzflowmessenger.domain.usecases.GetChatsUseCase
+import com.androider.buzzflowmessenger.domain.usecases.GetMessagesUseCase
+import com.androider.buzzflowmessenger.domain.usecases.SendMessageUseCase
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     private val findUserUseCase: FindUserUseCase,
     private val addFoundUserToChatsUseCase: AddFoundUserToChatsUseCase,
-    private val getChatsUseCase: GetChatsUseCase
+    private val getChatsUseCase: GetChatsUseCase,
+    private val sendMessageUseCase: SendMessageUseCase,
+    private val getMessagesUseCase: GetMessagesUseCase
 
 ) : ViewModel() {
     private val _state = MutableLiveData<MainState>()
@@ -30,9 +35,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun addFoundUserToChats(foundUserEntity: FoundUserEntity){
+    fun addFoundUserToChats(foundUserEntity: FoundUserEntity) =
         addFoundUserToChatsUseCase(foundUserEntity)
-    }
+
 
     fun getChats(){
         _state.value = MainState.Loading
@@ -44,6 +49,19 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+    fun sendMessage(messageEntity: MessageEntity) = sendMessageUseCase(messageEntity)
+
+    fun getMessages(currentUserID: String, anotherUserID: String) {
+        getMessagesUseCase(currentUserID, anotherUserID){
+            if (it.success){
+                _state.value = MainState.Messages(it.messages)
+            } else {
+                _state.value = MainState.Error(it.errorMessage)
+            }
+        }
+    }
+
 
 }
 

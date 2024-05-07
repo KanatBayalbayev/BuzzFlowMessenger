@@ -1,4 +1,4 @@
-package com.androider.buzzflowmessenger.presentation
+package com.androider.buzzflowmessenger.presentation.fragments
 
 import android.content.Context
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.androider.buzzflowmessenger.presentation.adapters
+package com.androider.buzzflowmessenger.presentation.adapters.users
 
 import androidx.recyclerview.widget.DiffUtil
 import com.androider.buzzflowmessenger.domain.models.FoundUserEntity

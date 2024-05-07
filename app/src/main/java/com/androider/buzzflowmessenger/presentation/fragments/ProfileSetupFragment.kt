@@ -1,4 +1,4 @@
-package com.androider.buzzflowmessenger
+package com.androider.buzzflowmessenger.presentation.fragments
 
 import android.app.Activity
 import android.content.Context
@@ -6,19 +6,18 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.androider.buzzflowmessenger.R
 import com.androider.buzzflowmessenger.databinding.FragmentProfileSetupBinding
-import com.androider.buzzflowmessenger.databinding.FragmentSignUpBinding
 import com.androider.buzzflowmessenger.presentation.activities.MyApplication
 import com.androider.buzzflowmessenger.presentation.viewmodel.AuthViewModel
 import com.androider.buzzflowmessenger.presentation.viewmodel.MainViewModelFactory
 import javax.inject.Inject
-
 
 class ProfileSetupFragment : Fragment() {
 

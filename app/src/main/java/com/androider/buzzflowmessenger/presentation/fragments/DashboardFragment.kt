@@ -14,12 +14,9 @@ import androidx.navigation.fragment.findNavController
 import com.androider.buzzflowmessenger.R
 import com.androider.buzzflowmessenger.databinding.FragmentDashboardBinding
 import com.androider.buzzflowmessenger.domain.models.FoundUserEntity
-import com.androider.buzzflowmessenger.presentation.ExitDialogFragment
-import com.androider.buzzflowmessenger.presentation.FindUserBottomSheetDialogFragment
-import com.androider.buzzflowmessenger.presentation.FindUserDialogFragment
 import com.androider.buzzflowmessenger.presentation.activities.MyApplication
-import com.androider.buzzflowmessenger.presentation.adapters.UsersAdapter
-import com.androider.buzzflowmessenger.presentation.models.FoundUser
+import com.androider.buzzflowmessenger.presentation.adapters.users.UsersAdapter
+import com.androider.buzzflowmessenger.presentation.utils.SharedPreferencesManager
 import com.androider.buzzflowmessenger.presentation.viewmodel.AuthState
 import com.androider.buzzflowmessenger.presentation.viewmodel.AuthViewModel
 import com.androider.buzzflowmessenger.presentation.viewmodel.MainState
@@ -34,6 +31,8 @@ class DashboardFragment :
     Fragment(),
     ExitDialogFragment.DialogListener,
     FindUserDialogFragment.DialogListener {
+
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
 
     private lateinit var authViewModel: AuthViewModel
     private lateinit var mainViewModel: MainViewModel
@@ -62,7 +61,7 @@ class DashboardFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
         usersAdapter = UsersAdapter(requireContext())
 
         val callback = object : OnBackPressedCallback(true) {
@@ -92,11 +91,13 @@ class DashboardFragment :
         attachRVtoAdapter()
         handleOnUserClick()
 
+        Log.d(TAG, "onViewCreated getCurrentUserID: ${getCurrentUserID()}")
 
 
     }
 
     private fun attachRVtoAdapter(){
+
         binding.recyclerView.adapter = usersAdapter
 //        binding.recyclerView.itemAnimator = null
     }
@@ -105,9 +106,20 @@ class DashboardFragment :
             
             override fun onUserClick(foundUser: FoundUserEntity) {
                 Log.d(TAG, "onUserClick: $foundUser")
+                openChatFragment(getCurrentUserID()!!, foundUser.id!!)
             }
 
         }
+    }
+    private fun getCurrentUserID(): String? {
+        return sharedPreferencesManager.getCurrentUserID()
+    }
+
+    private fun openChatFragment(currentUserId: String, compUserId: String) {
+        findNavController().navigate(
+            DashboardFragmentDirections
+                .navigateToChat(currentUserId, compUserId)
+        )
     }
 
 
