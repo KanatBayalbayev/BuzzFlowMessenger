@@ -8,6 +8,7 @@ data class MainResultDTO(
     val user: FoundUserDTO? = null,
     val chats: ArrayList<FoundUserEntity>? = null,
     val messages: ArrayList<MessageEntity>? = null,
+    val currentUser: CurrentUserDTO? = null,
     val errorMessage: String? = null
 )
 

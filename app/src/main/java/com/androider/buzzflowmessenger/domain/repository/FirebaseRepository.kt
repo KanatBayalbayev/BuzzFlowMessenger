@@ -1,6 +1,7 @@
 package com.androider.buzzflowmessenger.domain.repository
 
 import com.androider.buzzflowmessenger.domain.models.AuthResultEntity
+import com.androider.buzzflowmessenger.domain.models.CurrentUserEntity
 import com.androider.buzzflowmessenger.domain.models.FoundUserEntity
 import com.androider.buzzflowmessenger.domain.models.MainResultEntity
 import com.androider.buzzflowmessenger.domain.models.MessageEntity
@@ -25,11 +26,19 @@ interface FirebaseRepository {
 
     fun getChats(callback: (MainResultEntity) -> Unit)
 
-    fun sendMessage(messageEntity: MessageEntity)
+    fun sendMessage(
+        messageEntity: MessageEntity,
+        currentUserEntity: CurrentUserEntity
+    )
 
     fun getMessages(
         currentUserID: String,
         anotherUserID: String,
+        callback: (MainResultEntity) -> Unit
+    )
+
+    fun getCurrentUser(
+        currentUserID: String,
         callback: (MainResultEntity) -> Unit
     )
 

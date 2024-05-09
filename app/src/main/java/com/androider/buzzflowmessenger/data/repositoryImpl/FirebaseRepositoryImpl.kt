@@ -3,10 +3,11 @@ package com.androider.buzzflowmessenger.data.repositoryImpl
 import android.util.Log
 import com.androider.buzzflowmessenger.data.mapper.MainMapper
 import com.androider.buzzflowmessenger.data.models.AuthResultDTO
-import com.androider.buzzflowmessenger.data.models.CurrentUserFirebase
+import com.androider.buzzflowmessenger.data.models.CurrentUserDTO
 import com.androider.buzzflowmessenger.data.models.FoundUserDTO
 import com.androider.buzzflowmessenger.data.models.MainResultDTO
 import com.androider.buzzflowmessenger.domain.models.AuthResultEntity
+import com.androider.buzzflowmessenger.domain.models.CurrentUserEntity
 import com.androider.buzzflowmessenger.domain.models.FoundUserEntity
 import com.androider.buzzflowmessenger.domain.models.MainResultEntity
 import com.androider.buzzflowmessenger.domain.models.MessageEntity
@@ -46,7 +47,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                 if (currentUser != null) {
                     authResultDTO = AuthResultDTO(
                         success = true,
-                        user = CurrentUserFirebase(
+                        user = CurrentUserDTO(
                             id = currentUser.uid,
                             email = currentUser.email,
                             password = password,
@@ -122,7 +123,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                 if (currentUser != null) {
                     authResultDTO = AuthResultDTO(
                         success = true,
-                        user = CurrentUserFirebase(
+                        user = CurrentUserDTO(
                             id = currentUser.uid,
                             email = currentUser.email,
                             password = password,
@@ -254,21 +255,11 @@ class FirebaseRepositoryImpl @Inject constructor(
         })
     }
 
-    override fun sendMessage(messageEntity: MessageEntity) {
-//        users.child(message.senderID).addValueEventListener(object : ValueEventListener{
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                val user = snapshot.getValue(CurrentUserFirebase::class.java)
-//
-//                chats.child(message.companionID).child(message.senderID).setValue(user)
-//
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                TODO("Not yet implemented")
-//            }
-//
-//        })
-
+    override fun sendMessage(
+        messageEntity: MessageEntity,
+        currentUserEntity: CurrentUserEntity
+    ) {
+        chats.child(messageEntity.companionID).child(messageEntity.senderID).setValue(currentUserEntity)
         chats
             .child(messageEntity.companionID)
             .child(messageEntity.senderID)
@@ -355,6 +346,30 @@ class FirebaseRepositoryImpl @Inject constructor(
                     callback(mainMapper.mapMainResultDTOToEntity(mainResultDTO))
                 }
             })
+    }
+
+    override fun getCurrentUser(currentUserID: String, callback: (MainResultEntity) -> Unit) {
+        users.child(currentUserID).addValueEventListener(object : ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val user = snapshot.getValue(CurrentUserDTO::class.java)
+                mainResultDTO = MainResultDTO(
+                    success = true,
+                    currentUser = user
+                )
+                callback(mainMapper.mapMainResultDTOToEntity(mainResultDTO))
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                mainResultDTO = MainResultDTO(
+                    success = false,
+                    errorMessage = error.message
+                )
+                callback(mainMapper.mapMainResultDTOToEntity(mainResultDTO))
+            }
+
+        })
     }
 
     companion object {

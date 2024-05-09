@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.androider.buzzflowmessenger.databinding.FragmentChatBinding
+import com.androider.buzzflowmessenger.domain.models.CurrentUserEntity
 import com.androider.buzzflowmessenger.domain.models.MessageEntity
 import com.androider.buzzflowmessenger.presentation.activities.MyApplication
 import com.androider.buzzflowmessenger.presentation.adapters.messages.MessagesAdapter
@@ -57,7 +59,7 @@ class ChatFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate CurrentUserID: ${args.CurrentUserID}")
-        messagesAdapter = MessagesAdapter(args.CurrentUserID)
+
     }
 
     override fun onCreateView(
@@ -72,9 +74,9 @@ class ChatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
 
-        attachRVtoAdapter()
+//        attachRVtoAdapter()
 
-        sendMessage()
+//        sendMessage()
 
         mainViewModel.getMessages(args.CurrentUserID, args.AnotherUserID)
 
@@ -92,6 +94,9 @@ class ChatFragment : Fragment() {
 
                     mainState.messages?.let { handleMessagesList(it) }
                 }
+                is MainState.CurrentUser -> {
+                    mainState.currentUser?.let { sendMessage(it) }
+                }
                 is MainState.Error -> {
                     Log.d(TAG, "observeViewModel: ${mainState.exception}")
                 }
@@ -104,23 +109,31 @@ class ChatFragment : Fragment() {
 
     private fun handleMessagesList(list: ArrayList<MessageEntity>){
         Log.d(TAG, "onCreate list: $list")
-//        binding.recyclerView.viewTreeObserver.addOnGlobalLayoutListener(object :
-//            ViewTreeObserver.OnGlobalLayoutListener {
-//
-//            override fun onGlobalLayout() {
-//                if (list.isEmpty()) {
-//                    return
-//                }
-//                binding.recyclerView.scrollToPosition(list.size - 1)
-//                binding.recyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-//            }
-//
-//        })
+        messagesAdapter = MessagesAdapter(args.CurrentUserID)
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = messagesAdapter
+        binding.recyclerView.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
 
+            override fun onGlobalLayout() {
+                if (list.isEmpty()) {
+                    return
+                }
+                binding.recyclerView.scrollToPosition(list.size - 1)
+                binding.recyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+
+        })
+        messagesAdapter.submitList(list) {
+            if (list.isEmpty()) {
+                return@submitList
+            }
+            binding.recyclerView.scrollToPosition(list.size - 1)
+        }
         messagesAdapter.submitList(list)
     }
 
-    private fun sendMessage() {
+    private fun sendMessage(currentUserEntity: CurrentUserEntity) {
         binding.buttonToSendMessage.setOnClickListener {
             val textMessage = binding.inputMessageFromUser.getTrimmedValue()
             Log.d(TAG, "onViewCreated AnotherUserID: $textMessage")
@@ -133,7 +146,7 @@ class ChatFragment : Fragment() {
                 false
             )
 
-            mainViewModel.sendMessage(messageEntity)
+            mainViewModel.sendMessage(messageEntity, currentUserEntity)
             binding.inputMessageFromUser.setText("")
 
 

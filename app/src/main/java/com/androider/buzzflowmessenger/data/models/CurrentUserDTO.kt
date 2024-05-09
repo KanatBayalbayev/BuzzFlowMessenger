@@ -1,8 +1,6 @@
 package com.androider.buzzflowmessenger.data.models
 
-import android.net.Uri
-
-data class CurrentUserFirebase(
+data class CurrentUserDTO(
     val id: String?,
     val email: String?,
     var password: String?,

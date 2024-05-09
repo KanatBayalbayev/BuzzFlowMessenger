@@ -12,7 +12,7 @@ class MainMapper @Inject constructor() {
 
     fun mapAuthResultDTOToEntity(
         authResultDTO: AuthResultDTO
-    ):AuthResultEntity{
+    ): AuthResultEntity {
         return AuthResultEntity(
             success = authResultDTO.success,
             isSignedOut = authResultDTO.isSignedOut,
@@ -29,7 +29,7 @@ class MainMapper @Inject constructor() {
 
     fun mapMainResultDTOToEntity(
         mainResultDTO: MainResultDTO
-    ):MainResultEntity{
+    ): MainResultEntity {
         return MainResultEntity(
             success = mainResultDTO.success,
             foundUser = FoundUserEntity(
@@ -41,7 +41,19 @@ class MainMapper @Inject constructor() {
                 userProfileImage = mainResultDTO.user?.userProfileImage
             ),
             chats = mainResultDTO.chats,
-            messages = mainResultDTO.messages
+            messages = mainResultDTO.messages,
+            currentUserEntity = CurrentUserEntity(
+                id = mainResultDTO.currentUser?.id,
+                email = mainResultDTO.currentUser?.email,
+                password = mainResultDTO.currentUser?.password,
+                name = mainResultDTO.currentUser?.name,
+                online = mainResultDTO.currentUser?.online,
+                userProfileImage = mainResultDTO.currentUser?.userProfileImage,
+                lastTimeVisit = mainResultDTO.currentUser?.lastTimeVisit,
+                lastMessage = mainResultDTO.currentUser?.lastMessage,
+                lastTimeMessageSent = mainResultDTO.currentUser?.lastTimeMessageSent,
+                isTyping = mainResultDTO.currentUser?.isTyping,
+            )
         )
     }
 }

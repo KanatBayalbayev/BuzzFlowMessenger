@@ -155,6 +155,7 @@ class DashboardFragment :
                 }
                 is MainState.Chats -> {
                     hideLoading()
+                    Log.d(TAG, "observeViewModel chats: ${it.chats}")
                     usersAdapter.submitList(it.chats)
                 }
                 is MainState.Error -> {

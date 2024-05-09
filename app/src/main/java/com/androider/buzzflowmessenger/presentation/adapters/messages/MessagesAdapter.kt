@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.androider.buzzflowmessenger.R
@@ -12,7 +13,7 @@ import com.androider.buzzflowmessenger.domain.models.MessageEntity
 
 class MessagesAdapter(
     private val userID: String
-) : ListAdapter<MessageEntity, MessagesAdapter.ViewHolder>(MessagesDiffCallback) {
+) : ListAdapter<MessageEntity, MessagesAdapter.ViewHolder>(Comparator()) {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textViewMessage: TextView = view.findViewById(R.id.textMessage)
@@ -22,6 +23,16 @@ class MessagesAdapter(
         val messageSeen: TextView = view.findViewById(R.id.messageSeen)
     }
 
+    class Comparator : DiffUtil.ItemCallback<MessageEntity>() {
+        override fun areItemsTheSame(oldItem: MessageEntity, newItem: MessageEntity): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: MessageEntity, newItem: MessageEntity): Boolean {
+            return oldItem == newItem
+        }
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var layout = 0
@@ -48,6 +59,7 @@ class MessagesAdapter(
 //        holder.bind(message, userID, isReadMessage, compID)
         holder.textViewMessage.text = message.textMessage
         holder.sentMessageTime.text = message.timestamp
+        Log.d("MessagesAdapterTest", "onBindViewHolder message: ${message.textMessage}")
 //        if (position == currentList.size - 1){
 //            if (message.senderID == userID){
 //                if (message.isSeen){
