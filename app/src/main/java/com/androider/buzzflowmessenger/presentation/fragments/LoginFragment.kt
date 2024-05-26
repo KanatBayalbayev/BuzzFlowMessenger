@@ -64,26 +64,28 @@ class LoginFragment : Fragment() {
         navigation()
         signIn()
         viewModel.getStateLoggedIn()
-        viewModel.state.observe(viewLifecycleOwner) { authState ->
-            when (authState) {
-                is AuthState.isSignedIn -> {
-                    findNavController().navigate(R.id.navigateToDashboard)
-                }
-                is AuthState.Success -> {
+        viewModel.state.observe(viewLifecycleOwner) {
+            when (it) {
+                is AuthState.isSignedIn, is AuthState.Success -> {
                     findNavController().navigate(R.id.navigateToDashboard)
 
-                    sharedPreferencesManager.saveCurrentUserID(authState.user?.id.toString())
+                    if (it is AuthState.Success) {
+                        sharedPreferencesManager.saveCurrentUserID(it.user?.id.toString())
+                    }
                 }
+
                 is AuthState.Loading -> {
                     showLoading()
                 }
+
                 is AuthState.Error -> {
                     hideLoading()
-                    if (authState.exception != null) {
-                        showError(authState.exception)
+                    if (it.exception != null) {
+                        showError(it.exception)
                     }
                 }
-                else -> {}
+
+                AuthState.isSignedOut -> TODO()
             }
         }
 
